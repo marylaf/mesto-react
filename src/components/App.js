@@ -40,9 +40,6 @@ function App() {
     <body className="page">
       <Header />
       <Main
-        isEditAvatarPopupOpen={isEditAvatarPopupOpen}
-        isAddPlacePopupOpen={isAddPlacePopupOpen}
-        isEditProfilePopupOpen={isEditProfilePopupOpen}
         onEditProfile={handleEditProfileClick}
         onEditAvatar={handleEditAvatarClick}
         onAddPlace={handleAddPlaceClick}

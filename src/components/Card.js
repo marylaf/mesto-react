@@ -1,12 +1,12 @@
 import React from "react";
 
-function Card({ onCardClick, card }) {
+function Card({ onCardClick, card, likesCount }) {
   function handleCardClick() {
     onCardClick(card);
   }
 
   return (
-    <article className="card" key={card.key}>
+    <article className="card">
       <button
         className="popup__button-trash"
         aria-label="Удаление карточки"
@@ -15,7 +15,7 @@ function Card({ onCardClick, card }) {
       <img
         className="elements__image"
         src={card.link}
-        alt="храм"
+        alt={card.name}
         onClick={handleCardClick}
       />
       <div className="elements__block">
@@ -26,7 +26,7 @@ function Card({ onCardClick, card }) {
             className="elements__button"
             aria-label="Добавление лайка"
           ></button>
-          <span className="elements__button-count"></span>
+          <span className="elements__button-count">{likesCount}</span>
         </div>
       </div>
     </article>

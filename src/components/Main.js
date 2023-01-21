@@ -55,6 +55,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
               image={card.link}
               key={card._id}
               onCardClick={onCardClick}
+              likesCount={card.likes.length}
             />
           ))}
         </div>
