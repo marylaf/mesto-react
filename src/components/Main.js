@@ -1,23 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { api } from "../utils/Api";
+import React from "react";
 import Card from "./Card";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 
-function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
-  const [userName, setUserName] = useState("");
-  const [userDescription, setUserDescription] = useState("");
-  const [userAvatar, setUserAvatar] = useState("");
-  const [cards, setCards] = useState([]);
-
-  useEffect(() => {
-    Promise.all([api.getProfile(), api.getInitialCards()])
-      .then((res) => {
-        setUserDescription(res[0].about);
-        setUserAvatar(res[0].avatar);
-        setUserName(res[0].name);
-        setCards(res[1]);
-      })
-      .catch();
-  }, [onEditProfile, onEditAvatar]);
+function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, cards }) {
+  const currentUser = React.useContext(CurrentUserContext);
 
   return (
     <main className="content">
@@ -25,11 +11,15 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
         <div className="profile__container">
           <div className="profile__people">
             <div className="profile__avatar-pen" onClick={onEditAvatar}>
-              <img className="profile__avatar" src={userAvatar} alt="портрет" />
+              <img
+                className="profile__avatar"
+                src={currentUser.avatar}
+                alt="портрет"
+              />
             </div>
             <div className="profile__info">
-              <h1 className="profile__title">{userName}</h1>
-              <p className="profile__subtitle">{userDescription}</p>
+              <h1 className="profile__title">{currentUser.name}</h1>
+              <p className="profile__subtitle">{currentUser.about}</p>
               <button
                 onClick={onEditProfile}
                 type="button"
@@ -54,6 +44,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
               title={card.name}
               image={card.link}
               key={card._id}
+              id={currentUser._id}
               onCardClick={onCardClick}
               likesCount={card.likes.length}
             />
