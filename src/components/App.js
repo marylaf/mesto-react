@@ -19,7 +19,6 @@ function App() {
   useEffect(() => {
     Promise.all([api.getProfile(), api.getInitialCards()])
       .then((res) => {
-        console.log(res);
         setСurrentUser(res[0]);
         setCards(res[1]);
       })
@@ -43,6 +42,21 @@ function App() {
     setSelectedCard(card);
   }
 
+  function deleteCardClick(card) {
+    api.deleteCard(card._id).then(() => {
+      setCards((state) => state.filter((i) => i._id !== card._id));
+    });
+  }
+
+  function handleCardLike(card) {
+    const isLiked = card.likes.some((like) => like._id === currentUser._id);
+    api.changeLikeStatus(card._id, isLiked).then((newCard) => {
+      setCards((state) =>
+        state.map((like) => (like._id === card._id ? newCard : like))
+      );
+    });
+  }
+
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
@@ -59,39 +73,11 @@ function App() {
           onEditAvatar={handleEditAvatarClick}
           onAddPlace={handleAddPlaceClick}
           onCardClick={handleCardClick}
+          onDeleteClick={deleteCardClick}
+          onCardLike={handleCardLike}
           cards={cards}
         />
         <Footer />
-        <PopupWithForm
-          name="user-info"
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          title="Редактировать профиль"
-          saveText="Сохранить"
-        >
-          <input
-            type="text"
-            className="popup__info popup__info_form_title"
-            id="title-input"
-            placeholder="Имя"
-            name="name"
-            minLength="2"
-            maxLength="40"
-            required
-          />
-          <span className="span title-input-error"></span>
-          <input
-            type="text"
-            className="popup__info popup__info_form_subtitle"
-            id="subtitle-input"
-            name="about"
-            placeholder="О себе"
-            minLength="2"
-            maxLength="200"
-            required
-          />
-          <span className="span subtitle-input-error"></span>
-        </PopupWithForm>
         <PopupWithForm
           name="add-card"
           isOpen={isAddPlacePopupOpen}

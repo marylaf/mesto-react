@@ -1,19 +1,45 @@
 import React from "react";
 
-function Card({ onCardClick, card, likesCount }) {
+function Card({
+  onCardClick,
+  card,
+  likesCount,
+  currentUser,
+  onDeleteClick,
+  onCardLike,
+}) {
+  const isOwn = card.owner._id === currentUser._id;
+  const cardDeleteButtonClassName = isOwn
+    ? "popup__button-trash"
+    : "popup__button-trash_type_none";
+
+  const isLiked = card.likes.some((like) => like._id === currentUser._id);
+  const cardLikeButtonClassName = `elements__button ${
+    isLiked && "elements__button_active"
+  }`;
+
   function handleCardClick() {
     onCardClick(card);
+  }
+
+  function handleDeleteClick() {
+    onDeleteClick(card);
+  }
+
+  function handleCardLike() {
+    onCardLike(card);
   }
 
   return (
     <article className="card">
       <button
-        className="popup__button-trash"
+        className={cardDeleteButtonClassName}
         aria-label="Удаление карточки"
         type="button"
+        onClick={handleDeleteClick}
       ></button>
       <img
-        className="elements__image"
+        className={"elements__image"}
         src={card.link}
         alt={card.name}
         onClick={handleCardClick}
@@ -23,7 +49,8 @@ function Card({ onCardClick, card, likesCount }) {
         <div className="elements__block-like">
           <button
             type="button"
-            className="elements__button"
+            className={cardLikeButtonClassName}
+            onClick={handleCardLike}
             aria-label="Добавление лайка"
           ></button>
           <span className="elements__button-count">{likesCount}</span>
