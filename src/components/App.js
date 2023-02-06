@@ -4,6 +4,8 @@ import Main from "./Main";
 import Footer from "./Footer";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
+import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
 import { api } from "../utils/Api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 
@@ -13,13 +15,13 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
-  const [currentUser, setСurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
     Promise.all([api.getProfile(), api.getInitialCards()])
       .then((res) => {
-        setСurrentUser(res[0]);
+        setCurrentUser(res[0]);
         setCards(res[1]);
       })
       .catch();
@@ -64,6 +66,22 @@ function App() {
     setIsImagePopupOpen(false);
   }
 
+  function handleUpdateUser(data) {
+    api
+      .editProfile(data.name, data.about)
+      .then((userData) => setCurrentUser(userData))
+      .then(() => closeAllPopups())
+      .catch();
+  }
+
+  function handleUpdateAvatar(data) {
+    api
+      .addNewAvatar(data.avatar)
+      .then((userData) => setCurrentUser(userData))
+      .then(() => closeAllPopups())
+      .catch();
+  }
+
   return (
     <body className="page">
       <CurrentUserContext.Provider value={currentUser}>
@@ -78,6 +96,11 @@ function App() {
           cards={cards}
         />
         <Footer />
+        <EditProfilePopup
+          onUpdateUser={handleUpdateUser}
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+        />
         <PopupWithForm
           name="add-card"
           isOpen={isAddPlacePopupOpen}
@@ -106,23 +129,11 @@ function App() {
           />
           <span className="span link-input-error"></span>
         </PopupWithForm>
-        <PopupWithForm
-          name="avatar"
+        <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
-          title="Обновить аватар"
-          saveText="Сохранить"
           onClose={closeAllPopups}
-        >
-          <input
-            placeholder=" Ссылка на картинку"
-            type="url"
-            className="popup__info popup__info_form_avatar"
-            name="info-link"
-            id="avatar-input"
-            required
-          />
-          <span className="span avatar-input-error"></span>
-        </PopupWithForm>
+          onUpdateAvatar={handleUpdateAvatar}
+        />
         <ImagePopup
           isOpen={isImagePopupOpen}
           card={selectedCard}
