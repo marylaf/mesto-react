@@ -62,23 +62,6 @@ function Main({
           ))}
         </div>
       </section>
-      <div className="popup popup-confirmation">
-        <div className="popup__container">
-          <button
-            className="popup__button-drop"
-            aria-label="Закрытие попапа"
-            type="button"
-          ></button>
-          <h3 className="popup__correct">Вы уверены?</h3>
-          <form name="popup__form" className="popup__form" noValidate>
-            <input
-              type="submit"
-              className="popup__button-save popup__button-save_type_confirmation"
-              value="Да"
-            />
-          </form>
-        </div>
-      </div>
     </main>
   );
 }

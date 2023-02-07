@@ -8,12 +8,14 @@ import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import { api } from "../utils/Api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
+import PopupWithConfirmation from "./PopupWithConfirmation";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
+  const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
@@ -31,6 +33,11 @@ function App() {
     setIsEditProfilePopupOpen(true);
   }
 
+  function handleConfirmationClick(card) {
+    setIsConfirmationPopupOpen(true);
+    setSelectedCard(card);
+  }
+
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
@@ -45,9 +52,13 @@ function App() {
   }
 
   function deleteCardClick(card) {
-    api.deleteCard(card._id).then(() => {
-      setCards((state) => state.filter((i) => i._id !== card._id));
-    });
+    api
+      .deleteCard(card._id)
+      .then(() => {
+        setCards((state) => state.filter((i) => i._id !== card._id));
+      })
+      .then(() => closeAllPopups())
+      .catch();
   }
 
   function handleCardLike(card) {
@@ -64,6 +75,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsImagePopupOpen(false);
+    setIsConfirmationPopupOpen(false);
   }
 
   function handleUpdateUser(data) {
@@ -91,7 +103,7 @@ function App() {
   }
 
   return (
-    <body className="page">
+    <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
         <Main
@@ -99,7 +111,7 @@ function App() {
           onEditAvatar={handleEditAvatarClick}
           onAddPlace={handleAddPlaceClick}
           onCardClick={handleCardClick}
-          onDeleteClick={deleteCardClick}
+          onDeleteClick={handleConfirmationClick}
           onCardLike={handleCardLike}
           cards={cards}
         />
@@ -124,8 +136,14 @@ function App() {
           card={selectedCard}
           onClose={closeAllPopups}
         />
+        <PopupWithConfirmation
+          isOpen={isConfirmationPopupOpen}
+          onClose={closeAllPopups}
+          card={selectedCard}
+          onSubmitDeleteCard={deleteCardClick}
+        />
       </CurrentUserContext.Provider>
-    </body>
+    </div>
   );
 }
 
