@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
-import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
+import AddPlacePopup from "./AddPlacePopup";
 import { api } from "../utils/Api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 
@@ -82,6 +82,14 @@ function App() {
       .catch();
   }
 
+  function handleUpdateCards(data) {
+    api
+      .addNewCard(data.name, data.link)
+      .then((newCard) => setCards([newCard, ...cards]))
+      .then(() => closeAllPopups())
+      .catch();
+  }
+
   return (
     <body className="page">
       <CurrentUserContext.Provider value={currentUser}>
@@ -101,34 +109,11 @@ function App() {
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
         />
-        <PopupWithForm
-          name="add-card"
+        <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
-          title="Новое место"
-          saveText="Создать"
           onClose={closeAllPopups}
-        >
-          <input
-            placeholder=" Название"
-            type="text"
-            id="name-input"
-            className="popup__info popup__info_form_name"
-            name="info-name"
-            minLength="2"
-            maxLength="30"
-            required
-          />
-          <span className="span name-input-error"></span>
-          <input
-            placeholder=" Ссылка на картинку"
-            type="url"
-            className="popup__info popup__info_form_link"
-            name="info-link"
-            id="link-input"
-            required
-          />
-          <span className="span link-input-error"></span>
-        </PopupWithForm>
+          onUpdateCard={handleUpdateCards}
+        />
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
