@@ -57,7 +57,6 @@ function Main({
               onDeleteClick={onDeleteClick}
               onCardLike={onCardLike}
               likesCount={card.likes.length}
-              currentUser={currentUser}
             />
           ))}
         </div>

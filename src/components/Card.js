@@ -1,13 +1,8 @@
 import React from "react";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 
-function Card({
-  onCardClick,
-  card,
-  likesCount,
-  currentUser,
-  onDeleteClick,
-  onCardLike,
-}) {
+function Card({ onCardClick, card, likesCount, onDeleteClick, onCardLike }) {
+  const currentUser = React.useContext(CurrentUserContext);
   const isOwn = card.owner._id === currentUser._id;
   const cardDeleteButtonClassName = isOwn
     ? "popup__button-trash"

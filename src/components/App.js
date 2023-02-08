@@ -26,7 +26,7 @@ function App() {
         setCurrentUser(res[0]);
         setCards(res[1]);
       })
-      .catch();
+      .catch(console.log("Ошибка"));
   }, []);
 
   function handleEditProfileClick() {
@@ -58,16 +58,19 @@ function App() {
         setCards((state) => state.filter((i) => i._id !== card._id));
       })
       .then(() => closeAllPopups())
-      .catch();
+      .catch(console.log("Ошибка"));
   }
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((like) => like._id === currentUser._id);
-    api.changeLikeStatus(card._id, isLiked).then((newCard) => {
-      setCards((state) =>
-        state.map((like) => (like._id === card._id ? newCard : like))
-      );
-    });
+    api
+      .changeLikeStatus(card._id, isLiked)
+      .then((newCard) => {
+        setCards((state) =>
+          state.map((like) => (like._id === card._id ? newCard : like))
+        );
+      })
+      .catch(console.log("Ошибка"));
   }
 
   function closeAllPopups() {
@@ -83,7 +86,7 @@ function App() {
       .editProfile(data.name, data.about)
       .then((userData) => setCurrentUser(userData))
       .then(() => closeAllPopups())
-      .catch();
+      .catch(console.log("Ошибка"));
   }
 
   function handleUpdateAvatar(data) {
@@ -91,7 +94,7 @@ function App() {
       .addNewAvatar(data.avatar)
       .then((userData) => setCurrentUser(userData))
       .then(() => closeAllPopups())
-      .catch();
+      .catch(console.log("Ошибка"));
   }
 
   function handleUpdateCards(data) {
@@ -99,7 +102,7 @@ function App() {
       .addNewCard(data.name, data.link)
       .then((newCard) => setCards([newCard, ...cards]))
       .then(() => closeAllPopups())
-      .catch();
+      .catch(console.log("Ошибка"));
   }
 
   return (

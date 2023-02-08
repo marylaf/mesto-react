@@ -2,18 +2,26 @@ import PopupWithForm from "./PopupWithForm";
 import React from "react";
 
 function AddPlacePopup({ isOpen, onClose, onUpdateCard }) {
-  const nameInfo = React.useRef();
-  const desInfo = React.useRef();
+  const [cardName, setCardName] = React.useState("");
+  const [link, setLink] = React.useState("");
+
+  function handleCardNameChange(e) {
+    setCardName(e.target.value);
+  }
+
+  function handleLinkChange(e) {
+    setLink(e.target.value);
+  }
 
   function handleAddPlaceSubmit(e) {
     e.preventDefault();
 
     onUpdateCard({
-      name: nameInfo.current.value,
-      link: desInfo.current.value,
+      name: cardName,
+      link,
     });
-    nameInfo.current.value = "";
-    desInfo.current.value = "";
+    setCardName("");
+    setLink("");
   }
 
   return (
@@ -33,7 +41,8 @@ function AddPlacePopup({ isOpen, onClose, onUpdateCard }) {
         name="info-name"
         minLength="2"
         maxLength="30"
-        ref={nameInfo}
+        value={cardName}
+        onChange={handleCardNameChange}
         required
       />
       <span className="span name-input-error"></span>
@@ -43,7 +52,8 @@ function AddPlacePopup({ isOpen, onClose, onUpdateCard }) {
         className="popup__info popup__info_form_link"
         name="info-link"
         id="link-input"
-        ref={desInfo}
+        value={link}
+        onChange={handleLinkChange}
         required
       />
       <span className="span link-input-error"></span>
